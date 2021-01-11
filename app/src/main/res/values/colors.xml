@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<!--    <color name="colorPrimary">#6200EE</color>-->
+<!--    <color name="colorPrimaryDark">#3700B3</color>-->
+<!--    <color name="colorAccent">#03DAC5</color>-->
+
+    <color name="colorPrimaryDark">#c52481</color>
+    <color name="colorPrimary">#d21cab</color>
+    <color name="colorAccent">#d27272</color>
+    <color name="cayanLight">#d7478f</color>
+    <color name="orangeLight">#fa836f</color>
+    <color name="orangeStrong">#e94b3a</color>
+    <color name="violetStrong">#5c01b0</color>
+    <color name="violetLight">#8017cd</color>
+    <color name="violetOld">#6d245b</color>
+    <color name="greenHybridGray">#8c8768</color>
+
+    <color name="colorPrimaryText">#212121</color>
+    <color name="colorSecondaryText">#757575</color>
+    <color name="colorDivider">#BDBDBD</color>
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="colorBackground">#FAFAFA</color>
+    <color name="colorHintText">#BDBDBD</color>
+
+    <color name="album_title">#4c4c4c</color>
+
+</resources>
