@@ -12,15 +12,6 @@
         android:layout_height="match_parent"
         android:orientation="horizontal">
 
-        <ProgressBar
-            android:id="@+id/login_progress"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:indeterminate="true"
-            android:layout_gravity="center"
-            android:visibility="gone"/>
-
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

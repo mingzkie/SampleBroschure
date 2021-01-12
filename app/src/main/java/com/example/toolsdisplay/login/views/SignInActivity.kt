@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.toolsdisplay.R
 import com.example.toolsdisplay.base.ScopeActivity
 import com.example.toolsdisplay.home.views.HomeActivity
+import com.example.toolsdisplay.splashscreen.SplashScreenActivity
 import kotlinx.coroutines.launch
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.closestKodein
@@ -27,7 +28,6 @@ class SignInActivity : ScopeActivity(), KodeinAware {
     }
 
     private lateinit var loginViewModel: LoginViewModel
-    private lateinit var progressBar: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,9 +35,7 @@ class SignInActivity : ScopeActivity(), KodeinAware {
 
         loginViewModel = ViewModelProvider(this, loginViewModelFactory).get(LoginViewModel::class.java)
         initWatchData()
-        progressBar = findViewById(R.id.login_progress)
         findViewById<TextView>(R.id.button_sign_in).setOnClickListener {
-            progressBar.visibility = View.VISIBLE
             loggedIn()
         }
 
@@ -47,9 +45,8 @@ class SignInActivity : ScopeActivity(), KodeinAware {
         loginViewModel.accessToken.observe(this@SignInActivity, Observer { newAuth ->
             if(newAuth == null) return@Observer
 
-            progressBar.visibility = View.GONE
             if(!newAuth.isNullOrEmpty()) {
-                startActivity(Intent(applicationContext, HomeActivity::class.java))
+                startActivity(Intent(applicationContext, SplashScreenActivity::class.java))
             }
         })
     }

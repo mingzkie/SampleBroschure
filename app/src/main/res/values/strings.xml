@@ -18,5 +18,6 @@
     <string name="sign_in">Sign In</string>
     <string name="no_account_label">Don\'t have an account?</string>
     <string name="sign_up">Sign Up</string>
+    <string name="home_title">Brochure</string>
 
 </resources>

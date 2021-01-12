@@ -1,4 +1,4 @@
-package com.example.toolsdisplay.home.view
+package com.example.toolsdisplay.home.views
 
 import android.graphics.Rect
 import android.view.View

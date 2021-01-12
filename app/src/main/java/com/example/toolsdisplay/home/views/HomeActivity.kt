@@ -9,11 +9,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.ethanhua.skeleton.RecyclerViewSkeletonScreen
+import com.ethanhua.skeleton.Skeleton
 import com.example.toolsdisplay.R
 import com.example.toolsdisplay.base.ScopeActivity
 import com.example.toolsdisplay.home.dto.ToolsInfoDto
-import com.example.toolsdisplay.home.view.GridSpacingItemDecoration
-import com.example.toolsdisplay.home.view.ItemListAdapter
 import kotlinx.coroutines.launch
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.closestKodein
@@ -32,6 +32,8 @@ class HomeActivity : ScopeActivity(), KodeinAware {
 
     private lateinit var homeViewModel: HomeViewModel
 
+    private lateinit var skeletonScreen: RecyclerViewSkeletonScreen
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
@@ -43,6 +45,7 @@ class HomeActivity : ScopeActivity(), KodeinAware {
     }
 
     private fun initFetchData() = launch {
+         showShimmer()
          homeViewModel.fetchToolsInfoList(10,"ASC", "entity_id")
          updateView()
     }
@@ -50,7 +53,7 @@ class HomeActivity : ScopeActivity(), KodeinAware {
     private fun updateView(){
         homeViewModel.toolsInfoList.observe(this, Observer { toolsInfoList ->
             if(toolsInfoList== null) return@Observer
-
+            hideShimmer()
             if(!toolsInfoList.isNullOrEmpty()){
                this.itemRecyclerView.post( Runnable {
                      listData.clear()
@@ -62,8 +65,9 @@ class HomeActivity : ScopeActivity(), KodeinAware {
         })
     }
 
-    fun setUpView() {
+    private fun setUpView() {
         var toolbar: Toolbar = findViewById(R.id.home_toolbar)
+        toolbar.title = getString(R.string.home_title)
         setSupportActionBar(toolbar)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -71,10 +75,19 @@ class HomeActivity : ScopeActivity(), KodeinAware {
         }
 
         itemRecyclerView = findViewById(R.id.tools_recyclerview)
-        adapter = ItemListAdapter(ArrayList(), this)
+        adapter = ItemListAdapter(
+            ArrayList(),
+            this
+        )
         var layoutManager = GridLayoutManager(this, 2)
         itemRecyclerView.layoutManager = layoutManager
-        itemRecyclerView.addItemDecoration(GridSpacingItemDecoration(2, dpToPx(10), true))
+        itemRecyclerView.addItemDecoration(
+            GridSpacingItemDecoration(
+                2,
+                dpToPx(10),
+                true
+            )
+        )
         itemRecyclerView.itemAnimator = DefaultItemAnimator()
         itemRecyclerView.adapter = adapter
 
@@ -83,6 +96,18 @@ class HomeActivity : ScopeActivity(), KodeinAware {
     private fun dpToPx(dp: Int) : Int
     {
         return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, Float.fromBits(dp), resources.displayMetrics))
+    }
+
+    private fun showShimmer() {
+        this.skeletonScreen = Skeleton.bind(this.itemRecyclerView)
+            .adapter(adapter)
+            .load(R.layout.layout_default_item_skeleton)
+            .shimmer(true)
+            .show()
+    }
+
+    private fun hideShimmer(){
+        skeletonScreen?.hide()
     }
 
 

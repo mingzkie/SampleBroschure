@@ -7,7 +7,7 @@ import com.example.toolsdisplay.utilities.Constant
 
 data class ToolsInfoDto(var id: Int, var name: String, var price: Float, var imageLink: String,
                        var permaLink: String, var description: String, var modelVariant: String,
-                       var stockItemDto: StockItemDto?) {
+                       var stockItemDto: StockItemDto?, var isBookMarked: Boolean) {
 
 
     companion object {
@@ -39,8 +39,10 @@ data class ToolsInfoDto(var id: Int, var name: String, var price: Float, var ima
 
                 var imageLink : String = ""
 
-                if(!getCustomAttributesValuesFromResponse(responseItem.custom_attributes, CustomAttributesValues.IMAGE).isNullOrEmpty()){
-                    imageLink = Constant.IMAGE_LINK.plus(getCustomAttributesValuesFromResponse(responseItem.custom_attributes, CustomAttributesValues.IMAGE))
+                imageLink = if(!getCustomAttributesValuesFromResponse(responseItem.custom_attributes, CustomAttributesValues.IMAGE).isNullOrEmpty()){
+                    Constant.IMAGE_LINK.plus(getCustomAttributesValuesFromResponse(responseItem.custom_attributes, CustomAttributesValues.IMAGE))
+                } else {
+                    Constant.NO_IMAGE_LINK
                 }
 
                 resultList.add(ToolsInfoDto(responseItem.id,
@@ -50,7 +52,7 @@ data class ToolsInfoDto(var id: Int, var name: String, var price: Float, var ima
                     getCustomAttributesValuesFromResponse(responseItem.custom_attributes, CustomAttributesValues.PERMALINK),
                     getCustomAttributesValuesFromResponse(responseItem.custom_attributes, CustomAttributesValues.DESCRIPTION),
                     getCustomAttributesValuesFromResponse(responseItem.custom_attributes, CustomAttributesValues.MODEL_VARIANTS),
-                    StockItemDto.createFromResponse(responseItem.stockItem, responseItem.id)))
+                    StockItemDto.createFromResponse(responseItem.stockItem, responseItem.id), false))
             }
             return resultList
         }
@@ -67,7 +69,7 @@ data class ToolsInfoDto(var id: Int, var name: String, var price: Float, var ima
                     getCustomAttributesValuesFromDB(toolsFromDbItem.customAttributeData, CustomAttributesValues.PERMALINK),
                     getCustomAttributesValuesFromDB(toolsFromDbItem.customAttributeData, CustomAttributesValues.DESCRIPTION),
                     getCustomAttributesValuesFromDB(toolsFromDbItem.customAttributeData, CustomAttributesValues.MODEL_VARIANTS),
-                    StockItemDto.createFromDb(toolsFromDbItem.stockData!!, toolsFromDbItem.toolsInfo.id)))
+                    toolsFromDbItem.stockData?.let { StockItemDto.createFromDb(it, toolsFromDbItem.toolsInfo.id) }, false))
             }
             return resultList
         }

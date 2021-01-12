@@ -31,6 +31,8 @@ class Constant {
 
         const val IMAGE_LINK: String = "https://milwaukee.dtndev.com/pub/media/catalog/product/"
 
+        const val NO_IMAGE_LINK: String = "https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg"
+
         const val SHARED_PREFERENCE_FILENAME = "com.example.toolsdisplay.SharedSecuredPreferences"
 
         const val AUTH_BEARER_KEY_NAME = "Bearer "

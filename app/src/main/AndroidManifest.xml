@@ -24,8 +24,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".home.views.HomeActivity"
+        <activity android:name=".splashscreen.SplashScreenActivity"
             android:parentActivityName=".login.views.SignInActivity"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity android:name=".home.views.HomeActivity"
+            android:parentActivityName=".splashscreen.SplashScreenActivity"
             android:windowSoftInputMode="stateAlwaysHidden"/>
     </application>
 

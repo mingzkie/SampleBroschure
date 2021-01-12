@@ -61,7 +61,7 @@
                 android:layout_below="@id/item_thumbnail"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/ic_dots" />
+                android:src="@drawable/ic_bookmark_disable" />
 
         </RelativeLayout>
 
