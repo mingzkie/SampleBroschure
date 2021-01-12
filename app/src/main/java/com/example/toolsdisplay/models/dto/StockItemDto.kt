@@ -1,4 +1,4 @@
-package com.example.toolsdisplay.home.dto
+package com.example.toolsdisplay.models.dto
 
 import com.example.toolsdisplay.database.entities.StockItemData
 import com.example.toolsdisplay.models.ToolsItemListResponse

@@ -1,16 +1,14 @@
-package com.example.toolsdisplay.home.repository
+package com.example.toolsdisplay.repository
 
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.githubuser.network.NoConnectivityException
 import com.example.toolsdisplay.database.ToolsInfoDao
 import com.example.toolsdisplay.database.entities.CustomAttributeData
 import com.example.toolsdisplay.database.entities.MediaGalleryData
 import com.example.toolsdisplay.database.entities.StockItemData
 import com.example.toolsdisplay.database.entities.ToolsInfoData
-import com.example.toolsdisplay.database.relations.ToolsInfoCompleteData
-import com.example.toolsdisplay.home.dto.ToolsInfoDto
+import com.example.toolsdisplay.models.dto.ToolsInfoDto
 import com.example.toolsdisplay.models.ToolsItemListResponse
 import com.example.toolsdisplay.service.ServiceDataSource
 import com.example.toolsdisplay.utilities.Constant
@@ -25,6 +23,10 @@ class ToolsInfoRepositoryImpl(private val toolsInfoDao: ToolsInfoDao,
     override val result: LiveData<List<ToolsInfoDto>>
         get() = _listItem
 
+    var _productItem = MutableLiveData<ToolsInfoDto>()
+    override val productItem: LiveData<ToolsInfoDto>
+        get() = _productItem
+
     override suspend fun getToolsInfoList(pageSize: Int, sortOrder: String, field: String) {
         GlobalScope.launch(Dispatchers.IO ) {
               if(!toolsInfoDao.getToolsList().isNullOrEmpty()){
@@ -33,12 +35,12 @@ class ToolsInfoRepositoryImpl(private val toolsInfoDao: ToolsInfoDao,
               } else {
                   Log.d("ToolsInfoRepositoryImpl", "ToolsInfoRepositoryImpl: Getting from API")
                   serviceDataSource.getToolsList(pageSize, sortOrder, field, Constant.Companion.AUTH_BEARER_KEY_NAME.plus(toolsInfoDao.getAccessToken().authToken))
-                  persistResponse()
+                  persistProductListResponse()
               }
         }
     }
 
-    private fun persistResponse() {
+    private fun persistProductListResponse() {
         GlobalScope.launch(Dispatchers.Main ) {
             serviceDataSource.toolsList.observeForever { newData ->
 //                val sortedResult = newData.sortedBy { fetchedDataItem -> fetchedDataItem.trackId }
@@ -47,6 +49,29 @@ class ToolsInfoRepositoryImpl(private val toolsInfoDao: ToolsInfoDao,
             }
         }
 
+    }
+
+    override suspend fun getProductItem(id: Int, sku: String) {
+        GlobalScope.launch(Dispatchers.IO) {
+            if(toolsInfoDao.getProductItem(id) != null && toolsInfoDao.getProductItem(id).stockData != null) {
+               _productItem.postValue(ToolsInfoDto.createFromDbItem(toolsInfoDao.getProductItem(id)))
+            } else {
+                serviceDataSource.getProductItem(sku, Constant.Companion.AUTH_BEARER_KEY_NAME.plus(toolsInfoDao.getAccessToken().authToken))
+                persistProductItemResponse()
+//            serviceDataSource.productItem.observeForever { newData ->
+//                parseInfoData(newData)
+//            }
+            }
+        }
+    }
+
+    private fun persistProductItemResponse() {
+        GlobalScope.launch(Dispatchers.Main ) {
+            serviceDataSource.productItem.observeForever { newData ->
+                _productItem.postValue(ToolsInfoDto.createFromResponseItem(newData))
+                parseInfoData(newData)
+            }
+        }
     }
 
     private fun persistFetchedData(toolsList: List<ToolsItemListResponse.ToolsInfoItem>) {
@@ -63,7 +88,7 @@ class ToolsInfoRepositoryImpl(private val toolsInfoDao: ToolsInfoDao,
             toolsInfoDao.insertToolsInfo(ToolsInfoData(responseItem.id, responseItem.sku, responseItem.name,
                 responseItem.attribute_set_id, responseItem.price,
                 responseItem.status, responseItem.visibility, responseItem.type_id,
-                responseItem.created_at, responseItem.updated_at, responseItem.weight))
+                responseItem.created_at, responseItem.updated_at, responseItem.weight, false))
 
             for (mediaItem in responseItem.media_gallery_entries) {
                 toolsInfoDao.insertMediaGallery(

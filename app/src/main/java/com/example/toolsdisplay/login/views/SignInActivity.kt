@@ -47,6 +47,7 @@ class SignInActivity : ScopeActivity(), KodeinAware {
 
             if(!newAuth.isNullOrEmpty()) {
                 startActivity(Intent(applicationContext, SplashScreenActivity::class.java))
+                finish()
             }
         })
     }

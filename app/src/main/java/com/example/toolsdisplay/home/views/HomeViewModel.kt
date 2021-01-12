@@ -2,10 +2,8 @@ package com.example.toolsdisplay.home.views
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.example.toolsdisplay.home.dto.ToolsInfoDto
-import com.example.toolsdisplay.home.repository.ToolsInfoRepository
-import kotlinx.coroutines.launch
+import com.example.toolsdisplay.models.dto.ToolsInfoDto
+import com.example.toolsdisplay.repository.ToolsInfoRepository
 
 class HomeViewModel(private val toolsInfoRepository: ToolsInfoRepository) : ViewModel() {
 

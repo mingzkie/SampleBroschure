@@ -1,6 +1,7 @@
 package com.example.toolsdisplay.home.views
 
 import android.content.Context
+import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -11,9 +12,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.toolsdisplay.R
-import com.example.toolsdisplay.home.dto.ToolsInfoDto
+import com.example.toolsdisplay.detailscreen.DetailScreenActivity
+import com.example.toolsdisplay.models.dto.ToolsInfoDto
 
-class ItemListAdapter(private val listItemValues: List<ToolsInfoDto>, private val context: Context) :
+class ItemListAdapter(private val listItemValues: List<ToolsInfoDto>, private val context: Context,
+                      private val onClickProductItem: OnClickProductItem) :
     RecyclerView.Adapter<ItemListAdapter.ToolsItemViewHolder>() {
 
     private val listItems: MutableList<ToolsInfoDto> = listItemValues.toMutableList()
@@ -58,6 +61,15 @@ class ItemListAdapter(private val listItemValues: List<ToolsInfoDto>, private va
 
             productName.text = itemValues.name
             productPrice.text = "$".plus(itemValues.price.toString())
+
+            view.setOnClickListener {
+                val intent = Intent(view.context, DetailScreenActivity::class.java).apply {
+                    putExtra(HomeActivity.SKU, itemValues.sku)
+                    putExtra(HomeActivity.PRODUCT_ID, itemValues.id)
+                }
+                view.context.startActivity(intent)
+//                onClickProductItem?.onClickProductItem(itemValues.id, itemValues.sku)
+            }
 
         }
 

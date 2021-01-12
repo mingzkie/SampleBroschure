@@ -11,9 +11,13 @@ interface ServiceDataSource {
 
     val toolsList: LiveData<List<ToolsItemListResponse.ToolsInfoItem>>
 
+    val productItem: LiveData<ToolsItemListResponse.ToolsInfoItem>
+
     suspend fun login(request: LoginRequest)
 
     //field value is entity_id
     suspend fun getToolsList(pageSize: Int, sortOrder: String, field: String, accessToken: String)
+
+    suspend fun getProductItem(sku: String, accessToken: String)
 
 }

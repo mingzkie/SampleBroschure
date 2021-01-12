@@ -22,6 +22,10 @@ interface Service {
                         @Query("searchCriteria[sortOrders][0][field]") field: String,
                         @Header("Authorization") accessToken: String): ToolsItemListResponse
 
+    @GET("/products/{sku}")
+    suspend fun getProductDetail(@Path("sku") sku: String, @Header("Authorization") accessToken: String) : ToolsItemListResponse.ToolsInfoItem
+
+
     companion object {
         operator fun invoke(
             connectivityInterceptor: ConnectivityInterceptor

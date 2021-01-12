@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:orientation="vertical"
+    android:layout_width="@dimen/_250sdp"
+    android:layout_height="@dimen/_470sdp"
+    android:padding="@dimen/_5sdp"
+    android:layout_gravity="center"
+    android:clickable="true"
+    android:id="@+id/root_view">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/card_view"
@@ -19,20 +24,28 @@
             android:paddingBottom="@dimen/_10sdp">
 
             <ImageView
-                android:id="@+id/item_thumbnail"
+                android:id="@+id/img_close"
+                android:layout_width="@dimen/_30sdp"
+                android:layout_height="@dimen/_30sdp"
+                android:src="@drawable/ic_close"
+                android:layout_alignParentRight="true"
+                android:clickable="true" />
+
+            <ImageView
+                android:id="@+id/detail_thumbnail"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_160sdp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_placeholder_image"
                 android:paddingStart="@dimen/_10sdp"
                 android:paddingEnd="@dimen/_10sdp"
-                android:clickable="true" />
+                android:layout_marginTop="@dimen/_35sdp"/>
 
             <TextView
-                android:id="@+id/item_name"
+                android:id="@+id/detail_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/item_thumbnail"
+                android:layout_below="@id/detail_thumbnail"
                 android:paddingStart="@dimen/_10sdp"
                 android:paddingEnd="@dimen/_10sdp"
                 android:paddingTop="@dimen/_10sdp"
@@ -41,10 +54,10 @@
                 android:textSize="@dimen/_15sdp" />
 
             <TextView
-                android:id="@+id/item_price"
+                android:id="@+id/detail_price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/item_name"
+                android:layout_below="@id/detail_name"
                 android:paddingTop="@dimen/_10sdp"
                 android:paddingBottom="@dimen/_5sdp"
                 android:paddingLeft="@dimen/_10sdp"
@@ -53,15 +66,15 @@
                 android:textColor="@color/colorPrimaryText"
                 android:textSize="@dimen/_15sdp" />
 
-            <ImageView
-                android:id="@+id/item_overflow"
-                android:layout_width="@dimen/_20sdp"
-                android:layout_height="@dimen/_25sdp"
-                android:layout_alignParentRight="true"
-                android:layout_below="@id/item_thumbnail"
-                android:layout_marginTop="@dimen/_10sdp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/ic_bookmark_disable" />
+            <WebView
+                android:id="@+id/web_details"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/detail_price"
+                android:paddingStart="@dimen/_16sdp"
+                android:paddingEnd="@dimen/_16sdp"
+                android:gravity="center"
+                android:layout_marginTop="@dimen/_10sdp"/>
 
         </RelativeLayout>
 

@@ -37,6 +37,10 @@ class Constant {
 
         const val AUTH_BEARER_KEY_NAME = "Bearer "
 
+        const val SORT_ORDER = "ASC"
+
+        const val ENTITY_ID = "entity_id"
+
 
 
     }

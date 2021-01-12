@@ -18,6 +18,10 @@ class ServiceDataSourceImpl(private val service: Service) : ServiceDataSource {
     override val toolsList: LiveData<List<ToolsItemListResponse.ToolsInfoItem>>
         get() = _toolsList
 
+    private var _productItem = MutableLiveData<ToolsItemListResponse.ToolsInfoItem>()
+    override val productItem: LiveData<ToolsItemListResponse.ToolsInfoItem>
+        get() = _productItem
+
     override suspend fun login(request: LoginRequest) {
         Log.d("ServiceDataSource", "Invoking log in")
         try {
@@ -39,6 +43,13 @@ class ServiceDataSourceImpl(private val service: Service) : ServiceDataSource {
 
     }
 
-
-
+    override suspend fun getProductItem(sku: String, accessToken: String) {
+        Log.d("ServiceDataSource", "Invoking productItem")
+        try {
+            var fetchedData = service.getProductDetail(sku, accessToken)
+            this._productItem.postValue(fetchedData)
+        } catch (e: NoConnectivityException) {
+            Log.e("Connectivity", "No internet")
+        }
+    }
 }

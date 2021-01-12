@@ -23,10 +23,14 @@ interface ToolsInfoDao {
     suspend fun insertCustomAttributeData(mediaGalleryData: CustomAttributeData)
 
     @Transaction
-    @Query("SELECT * from ToolsInfoData")
+    @Query("SELECT * FROM ToolsInfoData")
     fun getToolsList() : List<ToolsInfoCompleteData>
 
-    @Query("SELECT * from AuthInfoData")
+    @Transaction
+    @Query("SELECT * FROM ToolsInfoData WHERE id=:id")
+    fun getProductItem(id: Int) : ToolsInfoCompleteData
+
+    @Query("SELECT * FROM AuthInfoData")
     fun getAccessToken() : AuthInfoData
 
 }

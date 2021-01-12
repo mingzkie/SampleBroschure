@@ -1,5 +1,7 @@
 package com.example.toolsdisplay.home.views
 
+import android.app.Dialog
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.TypedValue
@@ -13,7 +15,9 @@ import com.ethanhua.skeleton.RecyclerViewSkeletonScreen
 import com.ethanhua.skeleton.Skeleton
 import com.example.toolsdisplay.R
 import com.example.toolsdisplay.base.ScopeActivity
-import com.example.toolsdisplay.home.dto.ToolsInfoDto
+import com.example.toolsdisplay.detailscreen.DetailScreenActivity
+import com.example.toolsdisplay.models.dto.ToolsInfoDto
+import com.example.toolsdisplay.utilities.Constant
 import kotlinx.coroutines.launch
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.closestKodein
@@ -21,7 +25,12 @@ import org.kodein.di.generic.instance
 import java.util.*
 import kotlin.collections.ArrayList
 
-class HomeActivity : ScopeActivity(), KodeinAware {
+class HomeActivity : ScopeActivity(), KodeinAware, OnClickProductItem {
+
+    companion object {
+        const val SKU = "sku"
+        const val PRODUCT_ID = "productId"
+    }
 
     override val kodein by closestKodein()
     private val homeViewModelFactory by instance<HomeViewModelFactory>()
@@ -33,6 +42,7 @@ class HomeActivity : ScopeActivity(), KodeinAware {
     private lateinit var homeViewModel: HomeViewModel
 
     private lateinit var skeletonScreen: RecyclerViewSkeletonScreen
+    private lateinit var popUpDialog: Dialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,7 +56,7 @@ class HomeActivity : ScopeActivity(), KodeinAware {
 
     private fun initFetchData() = launch {
          showShimmer()
-         homeViewModel.fetchToolsInfoList(10,"ASC", "entity_id")
+         homeViewModel.fetchToolsInfoList(10, Constant.SORT_ORDER, Constant.ENTITY_ID)
          updateView()
     }
 
@@ -69,16 +79,14 @@ class HomeActivity : ScopeActivity(), KodeinAware {
         var toolbar: Toolbar = findViewById(R.id.home_toolbar)
         toolbar.title = getString(R.string.home_title)
         setSupportActionBar(toolbar)
+        popUpDialog = Dialog(this)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             Objects.requireNonNull(supportActionBar)?.setDisplayHomeAsUpEnabled(true)
         }
 
         itemRecyclerView = findViewById(R.id.tools_recyclerview)
-        adapter = ItemListAdapter(
-            ArrayList(),
-            this
-        )
+        adapter = ItemListAdapter(ArrayList(),this,this)
         var layoutManager = GridLayoutManager(this, 2)
         itemRecyclerView.layoutManager = layoutManager
         itemRecyclerView.addItemDecoration(
@@ -108,6 +116,16 @@ class HomeActivity : ScopeActivity(), KodeinAware {
 
     private fun hideShimmer(){
         skeletonScreen?.hide()
+    }
+
+    override fun onClickProductItem(id: Int, sku: String) {
+//        val intent = Intent(this, DetailScreenActivity::class.java).apply {
+//            putExtra(HomeActivity.SKU, sku)
+//            putExtra(HomeActivity.PRODUCT_ID, id)
+//        }
+//        startActivity(intent)
+//          popUpDialog.setContentView(R.layout.activity_detail_screen)
+
     }
 
 

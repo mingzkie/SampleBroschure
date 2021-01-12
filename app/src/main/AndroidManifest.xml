@@ -17,7 +17,9 @@
         <activity
             android:name=".login.views.SignInActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:launchMode="singleTop"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateAlwaysHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -26,10 +28,17 @@
         </activity>
         <activity android:name=".splashscreen.SplashScreenActivity"
             android:parentActivityName=".login.views.SignInActivity"
+            android:launchMode="singleTop"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity android:name=".home.views.HomeActivity"
+            android:launchMode="singleTop"
             android:parentActivityName=".splashscreen.SplashScreenActivity"
             android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity android:name=".detailscreen.DetailScreenActivity"
+            android:parentActivityName=".home.views.HomeActivity"
+            android:launchMode="singleTop"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:theme="@style/AppTheme.Dialog" />
     </application>
 
 </manifest>

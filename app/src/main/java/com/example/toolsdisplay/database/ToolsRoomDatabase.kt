@@ -26,6 +26,12 @@ abstract class ToolsRoomDatabase: RoomDatabase() {
             @JvmField
             val MIGRATION_1_2: Migration = MigrationVersion(1,2)
 
+            val MIGRATION_2_3 = object : Migration(2, 3) {
+                override fun migrate(database: SupportSQLiteDatabase) {
+                    database.execSQL("ALTER TABLE ToolsInfoData ADD COLUMN isBookMarked BOOLEAN")
+                }
+            }
+
             operator fun invoke(context: Context) = INSTANCE ?: synchronized(this) {
                 INSTANCE ?: buildDatabase(context).also { INSTANCE= it }
             }
@@ -33,7 +39,7 @@ abstract class ToolsRoomDatabase: RoomDatabase() {
             private fun buildDatabase(context: Context) =
                 Room.databaseBuilder(context.applicationContext,
                     ToolsRoomDatabase::class.java, "toolsinfo_database")
-                    .addMigrations(MIGRATION_1_2)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
                     .build()
 
         }
