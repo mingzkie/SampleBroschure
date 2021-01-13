@@ -9,9 +9,15 @@ class HomeViewModel(private val toolsInfoRepository: ToolsInfoRepository) : View
 
     var toolsInfoList: LiveData<List<ToolsInfoDto>> = toolsInfoRepository.result
 
+    var productItem: LiveData<ToolsInfoDto> = toolsInfoRepository.productItem
+
 
     suspend fun fetchToolsInfoList(pageSize: Int, sortOrder: String, field: String) {
         toolsInfoRepository.getToolsInfoList(pageSize, sortOrder, field)
+    }
+
+    suspend fun getProductItem(id: Int, sku: String) {
+        toolsInfoRepository.getProductItem(id, sku)
     }
 
 }

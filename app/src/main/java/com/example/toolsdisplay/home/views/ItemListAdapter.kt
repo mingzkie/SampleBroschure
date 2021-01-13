@@ -63,12 +63,12 @@ class ItemListAdapter(private val listItemValues: List<ToolsInfoDto>, private va
             productPrice.text = "$".plus(itemValues.price.toString())
 
             view.setOnClickListener {
-                val intent = Intent(view.context, DetailScreenActivity::class.java).apply {
-                    putExtra(HomeActivity.SKU, itemValues.sku)
-                    putExtra(HomeActivity.PRODUCT_ID, itemValues.id)
-                }
-                view.context.startActivity(intent)
-//                onClickProductItem?.onClickProductItem(itemValues.id, itemValues.sku)
+//                val intent = Intent(view.context, DetailScreenActivity::class.java).apply {
+//                    putExtra(HomeActivity.SKU, itemValues.sku)
+//                    putExtra(HomeActivity.PRODUCT_ID, itemValues.id)
+//                }
+//                view.context.startActivity(intent)
+                onClickProductItem?.onClickProductItem(itemValues.id, itemValues.sku)
             }
 
         }

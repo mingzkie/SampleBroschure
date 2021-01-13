@@ -1,8 +1,10 @@
 package com.example.toolsdisplay.login.views
 
+import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.lifecycle.Observer
@@ -29,16 +31,23 @@ class SignInActivity : ScopeActivity(), KodeinAware {
 
     private lateinit var loginViewModel: LoginViewModel
 
+    private lateinit var popUpDialog: Dialog
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_in)
 
         loginViewModel = ViewModelProvider(this, loginViewModelFactory).get(LoginViewModel::class.java)
         initWatchData()
+        setUpView()
+
+    }
+
+    private fun setUpView() {
+        popUpDialog = Dialog(this, R.style.ProgressDialogTheme)
         findViewById<TextView>(R.id.button_sign_in).setOnClickListener {
             loggedIn()
         }
-
     }
 
     private fun initWatchData() = launch {
@@ -46,6 +55,7 @@ class SignInActivity : ScopeActivity(), KodeinAware {
             if(newAuth == null) return@Observer
 
             if(!newAuth.isNullOrEmpty()) {
+                popUpDialog.hide()
                 startActivity(Intent(applicationContext, SplashScreenActivity::class.java))
                 finish()
             }
@@ -56,8 +66,16 @@ class SignInActivity : ScopeActivity(), KodeinAware {
 
          var username = findViewById<TextView>(R.id.sign_in_email).text.toString()
          var password = findViewById<TextView>(R.id.sign_in_password).text.toString()
+         showLoadingDialog()
          loginViewModel.attemptLogin(username, password)
 
+    }
+
+    private fun showLoadingDialog() {
+        popUpDialog.setContentView(R.layout.loading_indicator)
+        popUpDialog.setCancelable(false)
+        popUpDialog.setCanceledOnTouchOutside(false)
+        popUpDialog.show()
     }
 
 

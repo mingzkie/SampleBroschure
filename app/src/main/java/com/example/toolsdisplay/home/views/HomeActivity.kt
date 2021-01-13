@@ -5,12 +5,17 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.TypedValue
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.ethanhua.skeleton.RecyclerViewSkeletonScreen
 import com.ethanhua.skeleton.Skeleton
 import com.example.toolsdisplay.R
@@ -18,6 +23,7 @@ import com.example.toolsdisplay.base.ScopeActivity
 import com.example.toolsdisplay.detailscreen.DetailScreenActivity
 import com.example.toolsdisplay.models.dto.ToolsInfoDto
 import com.example.toolsdisplay.utilities.Constant
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.closestKodein
@@ -43,6 +49,11 @@ class HomeActivity : ScopeActivity(), KodeinAware, OnClickProductItem {
 
     private lateinit var skeletonScreen: RecyclerViewSkeletonScreen
     private lateinit var popUpDialog: Dialog
+
+    private lateinit var thumbnail: ImageView
+    private lateinit var close: ImageView
+    private lateinit var productName: TextView
+    private lateinit var productPrice: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -99,6 +110,14 @@ class HomeActivity : ScopeActivity(), KodeinAware, OnClickProductItem {
         itemRecyclerView.itemAnimator = DefaultItemAnimator()
         itemRecyclerView.adapter = adapter
 
+        //Pop up view
+        popUpDialog.setContentView(R.layout.activity_detail_screen)
+
+        this.thumbnail = popUpDialog.findViewById(R.id.detail_thumbnail)
+        this.close = popUpDialog.findViewById(R.id.detail_close)
+        this.productName = popUpDialog.findViewById(R.id.detail_name)
+        this.productPrice = popUpDialog.findViewById(R.id.detail_price)
+
     }
 
     private fun dpToPx(dp: Int) : Int
@@ -125,9 +144,47 @@ class HomeActivity : ScopeActivity(), KodeinAware, OnClickProductItem {
 //        }
 //        startActivity(intent)
 //          popUpDialog.setContentView(R.layout.activity_detail_screen)
+        clearPopUpView()
+        lifecycleScope.launch {
+            homeViewModel.getProductItem(id, sku)
+            showPopUp()
+        }
 
     }
 
+    private fun showPopUp(){
+        homeViewModel.productItem.observe(this, Observer { productData ->
+            if(productData == null) return@Observer
+            hideShimmer()
+
+            if(productData != null){
+                Glide.with(this)
+                    .load(productData.imageLink)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
+                    .placeholder(R.drawable.ic_placeholder_image)
+//                    .placeholder(R.drawable.progress_animation)
+                    .into(thumbnail)
+
+                productName.text = productData.name
+                productPrice.text = "$".plus(productData.price.toString())
+            }
+
+        })
+
+        close.setOnClickListener {
+            popUpDialog.dismiss()
+        }
+
+        popUpDialog.show()
+
+    }
+
+    private fun clearPopUpView() {
+        Glide.with(this).clear(thumbnail)
+        productName.text = ""
+        productPrice.text = ""
+    }
 
 //    private fun inputData(): List<ToolsInfoDto> {
 //

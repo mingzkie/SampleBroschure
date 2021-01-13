@@ -20,4 +20,8 @@
         <item name="android:windowNoTitle">true</item>
     </style>
 
+    <style name="ProgressDialogTheme" parent="Theme.MaterialComponents.Light.Dialog">
+
+    </style>
+
 </resources>
