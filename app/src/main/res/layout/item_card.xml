@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:layout_margin="@dimen/_5sdp"
-        android:elevation="3dp"
+        android:elevation="@dimen/_5sdp"
         card_view:cardCornerRadius="@dimen/_2sdp">
 
         <RelativeLayout
@@ -50,6 +50,7 @@
                 android:paddingBottom="@dimen/_5sdp"
                 android:paddingLeft="@dimen/_10sdp"
                 android:paddingRight="@dimen/_10sdp"
+                android:layout_marginEnd="@dimen/_10sdp"
                 android:text="Price: $227.00"
                 android:textColor="@color/colorPrimaryText"
                 android:textSize="@dimen/_15sdp" />
