@@ -41,6 +41,8 @@ class Constant {
 
         const val ENTITY_ID = "entity_id"
 
+        const val SCHEME = "UTF-8"
+
 
 
     }

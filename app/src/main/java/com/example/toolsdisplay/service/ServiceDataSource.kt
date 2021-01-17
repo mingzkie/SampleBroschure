@@ -13,6 +13,8 @@ interface ServiceDataSource {
 
     val productItem: LiveData<ToolsItemListResponse.ToolsInfoItem>
 
+    val errorMessage: LiveData<ServiceDataSourceImpl.ErrorResponseEvent>
+
     suspend fun login(request: LoginRequest)
 
     //field value is entity_id

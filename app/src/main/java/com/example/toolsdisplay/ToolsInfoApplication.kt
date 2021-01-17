@@ -5,8 +5,8 @@ import com.example.githubuser.network.ConnectivityInterceptor
 import com.example.githubuser.network.ConnectivityInterceptorImpl
 import com.example.toolsdisplay.database.ToolsRoomDatabase
 import com.example.toolsdisplay.detailscreen.views.DetailViewModelFactory
-import com.example.toolsdisplay.repository.ToolsInfoRepository
-import com.example.toolsdisplay.repository.ToolsInfoRepositoryImpl
+import com.example.toolsdisplay.home.repository.ToolsInfoRepository
+import com.example.toolsdisplay.home.repository.ToolsInfoRepositoryImpl
 import com.example.toolsdisplay.home.views.HomeViewModelFactory
 import com.example.toolsdisplay.login.repository.LoginRepository
 import com.example.toolsdisplay.login.repository.LoginRepositoryImpl

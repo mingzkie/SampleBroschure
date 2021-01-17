@@ -2,8 +2,7 @@ package com.example.toolsdisplay.detailscreen.views
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.toolsdisplay.home.views.HomeViewModel
-import com.example.toolsdisplay.repository.ToolsInfoRepository
+import com.example.toolsdisplay.home.repository.ToolsInfoRepository
 
 class DetailViewModelFactory(private val toolsInfoRepository: ToolsInfoRepository) : ViewModelProvider.NewInstanceFactory() {
     @Suppress("UNCHECKED_CAST")

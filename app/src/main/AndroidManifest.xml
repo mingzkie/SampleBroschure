@@ -8,6 +8,8 @@
     <application
         android:name=".ToolsInfoApplication"
         android:allowBackup="true"
+        android:hardwareAccelerated="false"
+        android:largeHeap="true"
         android:icon="@mipmap/ic_launcher"
         android:requestLegacyExternalStorage="true"
         android:label="@string/app_name"

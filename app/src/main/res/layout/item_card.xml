@@ -55,7 +55,7 @@
                 android:textSize="@dimen/_15sdp" />
 
             <ImageView
-                android:id="@+id/item_overflow"
+                android:id="@+id/bookmark"
                 android:layout_width="@dimen/_20sdp"
                 android:layout_height="@dimen/_25sdp"
                 android:layout_alignParentRight="true"

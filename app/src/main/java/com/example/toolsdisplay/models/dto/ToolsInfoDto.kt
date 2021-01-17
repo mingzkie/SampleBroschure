@@ -54,12 +54,16 @@ data class ToolsInfoDto(var id: Int, var name: String, var sku: String, var pric
         @JvmStatic
         fun createFromResponseItem(productItem: ToolsItemListResponse.ToolsInfoItem) : ToolsInfoDto {
 
-            var imageLink : String = ""
-
-            imageLink = if(!getCustomAttributesValuesFromResponse(productItem.custom_attributes, CustomAttributesValues.IMAGE).isNullOrEmpty()){
+            var imageLink = if(!getCustomAttributesValuesFromResponse(productItem.custom_attributes, CustomAttributesValues.IMAGE).isNullOrEmpty()){
                 Constant.IMAGE_LINK.plus(getCustomAttributesValuesFromResponse(productItem.custom_attributes, CustomAttributesValues.IMAGE))
             } else {
                 Constant.NO_IMAGE_LINK
+            }
+
+            var description = if(!getCustomAttributesValuesFromResponse(productItem.custom_attributes, CustomAttributesValues.DESCRIPTION).isNullOrEmpty()){
+                getCustomAttributesValuesFromResponse(productItem.custom_attributes, CustomAttributesValues.DESCRIPTION)
+            } else {
+                "No available description"
             }
 
             return ToolsInfoDto(productItem.id,
@@ -68,7 +72,7 @@ data class ToolsInfoDto(var id: Int, var name: String, var sku: String, var pric
                 productItem.price,
                 imageLink,
                 getCustomAttributesValuesFromResponse(productItem.custom_attributes, CustomAttributesValues.PERMALINK),
-                getCustomAttributesValuesFromResponse(productItem.custom_attributes, CustomAttributesValues.DESCRIPTION),
+                description,
                 getCustomAttributesValuesFromResponse(productItem.custom_attributes, CustomAttributesValues.MODEL_VARIANTS),
                 StockItemDto.createFromResponse(productItem.stockItem, productItem.id), false)
 
@@ -77,12 +81,17 @@ data class ToolsInfoDto(var id: Int, var name: String, var sku: String, var pric
 
         @JvmStatic
         fun createFromDbItem(productItem: ToolsInfoCompleteData) : ToolsInfoDto {
-            var imageLink : String = ""
 
-            imageLink = if(!getCustomAttributesValuesFromDB(productItem.customAttributeData, CustomAttributesValues.IMAGE).isNullOrEmpty()){
+            var imageLink = if(!getCustomAttributesValuesFromDB(productItem.customAttributeData, CustomAttributesValues.IMAGE).isNullOrEmpty()){
                 Constant.IMAGE_LINK.plus(getCustomAttributesValuesFromDB(productItem.customAttributeData, CustomAttributesValues.IMAGE))
             } else {
                 Constant.NO_IMAGE_LINK
+            }
+
+            var description = if(!getCustomAttributesValuesFromDB(productItem.customAttributeData, CustomAttributesValues.DESCRIPTION).isNullOrEmpty()){
+                getCustomAttributesValuesFromDB(productItem.customAttributeData, CustomAttributesValues.DESCRIPTION)
+            } else {
+                "No available description"
             }
 
             return ToolsInfoDto(productItem.toolsInfo.id,

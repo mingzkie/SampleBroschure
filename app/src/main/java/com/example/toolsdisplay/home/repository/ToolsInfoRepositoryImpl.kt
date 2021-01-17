@@ -1,4 +1,4 @@
-package com.example.toolsdisplay.repository
+package com.example.toolsdisplay.home.repository
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -11,7 +11,9 @@ import com.example.toolsdisplay.database.entities.ToolsInfoData
 import com.example.toolsdisplay.models.dto.ToolsInfoDto
 import com.example.toolsdisplay.models.ToolsItemListResponse
 import com.example.toolsdisplay.service.ServiceDataSource
+import com.example.toolsdisplay.service.ServiceDataSourceImpl
 import com.example.toolsdisplay.utilities.Constant
+import com.example.toolsdisplay.utilities.SingleLiveEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -26,6 +28,16 @@ class ToolsInfoRepositoryImpl(private val toolsInfoDao: ToolsInfoDao,
     var _productItem = MutableLiveData<ToolsInfoDto>()
     override val productItem: LiveData<ToolsInfoDto>
         get() = _productItem
+
+    var _errorMessage = MutableLiveData<ServiceDataSourceImpl.ErrorResponseEvent>()
+    override val errorMessage: LiveData<ServiceDataSourceImpl.ErrorResponseEvent>
+        get() = _errorMessage
+
+    init {
+        serviceDataSource.errorMessage.observeForever { errorMessageEvent ->
+            _errorMessage.postValue(errorMessageEvent) }
+    }
+
 
     override suspend fun getToolsInfoList(pageSize: Int, sortOrder: String, field: String) {
         GlobalScope.launch(Dispatchers.IO ) {
@@ -58,9 +70,22 @@ class ToolsInfoRepositoryImpl(private val toolsInfoDao: ToolsInfoDao,
             } else {
                 serviceDataSource.getProductItem(sku, Constant.Companion.AUTH_BEARER_KEY_NAME.plus(toolsInfoDao.getAccessToken().authToken))
                 persistProductItemResponse()
-//            serviceDataSource.productItem.observeForever { newData ->
-//                parseInfoData(newData)
-//            }
+            }
+        }
+    }
+
+    override fun updateBookmark(id: Int, isBookMarked: Boolean) {
+        Log.d("TOOLS REPO", "UPDATE BOOKMARK")
+        GlobalScope.launch(Dispatchers.IO) {
+            toolsInfoDao.updateBookmark(id,isBookMarked)
+        }
+    }
+
+    override suspend fun reloadData() {
+        GlobalScope.launch(Dispatchers.IO ) {
+            if (!toolsInfoDao.getToolsList().isNullOrEmpty()) {
+                Log.d("ToolsInfoRepositoryImpl", "Reloading List")
+                _listItem.postValue(ToolsInfoDto.createFromDb(toolsInfoDao.getToolsList()))
             }
         }
     }
@@ -79,7 +104,6 @@ class ToolsInfoRepositoryImpl(private val toolsInfoDao: ToolsInfoDao,
               parseInfoData(toolsListItem)
           }
     }
-
 
     private fun parseInfoData(responseItem: ToolsItemListResponse.ToolsInfoItem) {
         var id = responseItem.id
