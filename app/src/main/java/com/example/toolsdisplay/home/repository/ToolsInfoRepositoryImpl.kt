@@ -65,7 +65,7 @@ class ToolsInfoRepositoryImpl(private val toolsInfoDao: ToolsInfoDao,
 
     override suspend fun getProductItem(id: Int, sku: String) {
         GlobalScope.launch(Dispatchers.IO) {
-            if(toolsInfoDao.getProductItem(id) != null && toolsInfoDao.getProductItem(id).stockData != null) {
+            if(toolsInfoDao.getProductItem(id) != null) {
                _productItem.postValue(ToolsInfoDto.createFromDbItem(toolsInfoDao.getProductItem(id)))
             } else {
                 serviceDataSource.getProductItem(sku, Constant.Companion.AUTH_BEARER_KEY_NAME.plus(toolsInfoDao.getAccessToken().authToken))
@@ -74,10 +74,10 @@ class ToolsInfoRepositoryImpl(private val toolsInfoDao: ToolsInfoDao,
         }
     }
 
-    override fun updateBookmark(id: Int, isBookMarked: Boolean) {
+    override fun update(toolsInfoData: ToolsInfoData) {
         Log.d("TOOLS REPO", "UPDATE BOOKMARK")
         GlobalScope.launch(Dispatchers.IO) {
-            toolsInfoDao.updateBookmark(id,isBookMarked)
+            toolsInfoDao.update(toolsInfoData)
         }
     }
 
@@ -112,7 +112,7 @@ class ToolsInfoRepositoryImpl(private val toolsInfoDao: ToolsInfoDao,
             toolsInfoDao.insertToolsInfo(ToolsInfoData(responseItem.id, responseItem.sku, responseItem.name,
                 responseItem.attribute_set_id, responseItem.price,
                 responseItem.status, responseItem.visibility, responseItem.type_id,
-                responseItem.created_at, responseItem.updated_at, responseItem.weight, false))
+                responseItem.created_at, responseItem.updated_at, responseItem.weight, false, 0))
 
             for (mediaItem in responseItem.media_gallery_entries) {
                 toolsInfoDao.insertMediaGallery(

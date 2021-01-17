@@ -22,6 +22,7 @@ import com.ethanhua.skeleton.RecyclerViewSkeletonScreen
 import com.ethanhua.skeleton.Skeleton
 import com.example.toolsdisplay.R
 import com.example.toolsdisplay.base.ScopeActivity
+import com.example.toolsdisplay.database.entities.ToolsInfoData
 import com.example.toolsdisplay.models.dto.ToolsInfoDto
 import com.example.toolsdisplay.service.ServiceDataSourceImpl
 import com.example.toolsdisplay.utilities.Constant
@@ -116,10 +117,10 @@ class HomeActivity : ScopeActivity(), KodeinAware, OnClickProductItem {
 
     }
 
-    private fun updateView(position: Int, bookMarked: Boolean) {
+    private fun updateView(position: Int, bookMarked: Int) {
         showShimmer()
         this.listData = adapter.getData().toMutableList()
-        this.listData[position].isBookMarked = bookMarked
+        this.listData[position].bookMarked = bookMarked
         itemRecyclerView.post(Runnable {
             adapter.updateList(listData)
             adapter.notifyDataSetChanged()
@@ -231,10 +232,7 @@ class HomeActivity : ScopeActivity(), KodeinAware, OnClickProductItem {
     }
 
     private fun showPopUp(position: Int){
-        homeViewModel.productItem.observe(this, Observer { productData ->
-            if(productData == null) return@Observer
-
-
+        var productData = this.listData[position]
             if(productData != null){
                 hideShimmer()
                 hideLoadingDialog()
@@ -251,10 +249,10 @@ class HomeActivity : ScopeActivity(), KodeinAware, OnClickProductItem {
                 productName.text = productData.name
                 productPrice.text = "$".plus(productData.price.toString())
 
-                if(productData.isBookMarked){
-                    bookMarked.setImageResource(R.drawable.ic_bookmark_enable)
-                } else {
+                if(productData.bookMarked == 0){
                     bookMarked.setImageResource(R.drawable.ic_bookmark_disable)
+                } else if(productData.bookMarked == 1){
+                    bookMarked.setImageResource(R.drawable.ic_bookmark_enable)
                 }
 
                 if(!productData.description.isNullOrEmpty()){
@@ -270,27 +268,24 @@ class HomeActivity : ScopeActivity(), KodeinAware, OnClickProductItem {
                     })
                 }
 
-                var bookMarkChanged: Boolean
+                var bookMarkChanged: Int = productData.bookMarked
                 bookMarked.setOnClickListener {
-                    if(productData.isBookMarked){
-                        bookMarkChanged = false
-                        bookMarked.setImageResource(R.drawable.ic_bookmark_disable)
-                    } else {
-                        bookMarkChanged = true
+                    if(bookMarkChanged == 0){
+                        bookMarkChanged = 1
                         bookMarked.setImageResource(R.drawable.ic_bookmark_enable)
+                    } else if(bookMarkChanged == 1){
+                        bookMarkChanged = 0
+                        bookMarked.setImageResource(R.drawable.ic_bookmark_disable)
                     }
 
-                    homeViewModel.updateBookMark(position, bookMarkChanged)
+                    productData.bookMarked = bookMarkChanged
+                    homeViewModel.update(ToolsInfoDto.convertDtoToData(productData))
                     updateView(position, bookMarkChanged)
 
                 }
                 popUpDialog.show()
 
             }
-
-        })
-
-
 
     }
 

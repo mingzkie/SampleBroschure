@@ -30,10 +30,13 @@ interface ToolsInfoDao {
     @Query("SELECT * FROM ToolsInfoData WHERE id=:id")
     fun getProductItem(id: Int) : ToolsInfoCompleteData
 
-    @Query("UPDATE ToolsInfoData SET isBookMarked = :isBookMarked WHERE id=:id")
-    fun updateBookmark(id: Int, isBookMarked: Boolean)
+    @Query("UPDATE ToolsInfoData SET bookMarked = :bookMarked WHERE id=:id")
+    fun updateBookmark(id: Int, bookMarked: Int)
 
     @Query("SELECT * FROM AuthInfoData")
     suspend fun getAccessToken() : AuthInfoData
+
+    @Update
+    suspend fun update(toolsInfoData: ToolsInfoData)
 
 }

@@ -1,16 +1,26 @@
 package com.example.toolsdisplay.models.dto
 
 import com.example.toolsdisplay.database.entities.CustomAttributeData
+import com.example.toolsdisplay.database.entities.ToolsInfoData
 import com.example.toolsdisplay.database.relations.ToolsInfoCompleteData
 import com.example.toolsdisplay.models.ToolsItemListResponse
 import com.example.toolsdisplay.utilities.Constant
 
 data class ToolsInfoDto(var id: Int, var name: String, var sku: String, var price: Float, var imageLink: String,
                        var permaLink: String, var description: String, var modelVariant: String,
-                       var stockItemDto: StockItemDto?, var isBookMarked: Boolean) {
+                       var stockItemDto: StockItemDto?, var bookMarked: Int, var attributeSetId: Int, var status: Int,
+                       var visibility: Int, var typeID: String, var createdAt: String, var updatedAt: String, var weight: Int) {
 
 
     companion object {
+
+        @JvmStatic
+        fun convertDtoToData(toolsInfoDto: ToolsInfoDto) : ToolsInfoData {
+            return ToolsInfoData(toolsInfoDto.id, toolsInfoDto.sku, toolsInfoDto.name,
+                toolsInfoDto.attributeSetId, toolsInfoDto.price,
+                toolsInfoDto.status, toolsInfoDto.visibility, toolsInfoDto.typeID,
+                toolsInfoDto.createdAt, toolsInfoDto.updatedAt, toolsInfoDto.weight, false, toolsInfoDto.bookMarked)
+        }
 
         private fun getCustomAttributesValuesFromResponse(customAttributesList: List<ToolsItemListResponse.CustomAttributes>, attr: CustomAttributesValues): String {
             val customAttr: ToolsItemListResponse.CustomAttributes? = customAttributesList.find {
@@ -74,8 +84,8 @@ data class ToolsInfoDto(var id: Int, var name: String, var sku: String, var pric
                 getCustomAttributesValuesFromResponse(productItem.custom_attributes, CustomAttributesValues.PERMALINK),
                 description,
                 getCustomAttributesValuesFromResponse(productItem.custom_attributes, CustomAttributesValues.MODEL_VARIANTS),
-                StockItemDto.createFromResponse(productItem.stockItem, productItem.id), false)
-
+                StockItemDto.createFromResponse(productItem.stockItem, productItem.id), 0, productItem.attribute_set_id,
+                productItem.status, productItem.visibility, productItem.type_id, productItem.created_at, productItem.updated_at, productItem.weight)
 
         }
 
@@ -102,7 +112,10 @@ data class ToolsInfoDto(var id: Int, var name: String, var sku: String, var pric
                 getCustomAttributesValuesFromDB(productItem.customAttributeData, CustomAttributesValues.PERMALINK),
                 getCustomAttributesValuesFromDB(productItem.customAttributeData, CustomAttributesValues.DESCRIPTION),
                 getCustomAttributesValuesFromDB(productItem.customAttributeData, CustomAttributesValues.MODEL_VARIANTS),
-                productItem.stockData?.let { StockItemDto.createFromDb(it, productItem.toolsInfo.id) }, false)
+                productItem.stockData?.let { StockItemDto.createFromDb(it, productItem.toolsInfo.id) }, 0,
+                productItem.toolsInfo.attribute_set_id, productItem.toolsInfo.status, productItem.toolsInfo.visibility,
+                productItem.toolsInfo.type_id, productItem.toolsInfo.created_at, productItem.toolsInfo.updated_at,
+                productItem.toolsInfo.weight)
 
         }
 

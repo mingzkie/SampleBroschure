@@ -23,8 +23,8 @@ class HomeViewModel(private val toolsInfoRepository: ToolsInfoRepository) : View
         toolsInfoRepository.getProductItem(id, sku)
     }
 
-    fun updateBookMark(id: Int, isBookMarked: Boolean) {
-        toolsInfoRepository.updateBookmark(id, isBookMarked)
+    fun update(toolsInfoData: ToolsInfoData) {
+        toolsInfoRepository.update(toolsInfoData)
     }
 
     suspend fun reloadData() {

@@ -16,4 +16,5 @@ data class ToolsInfoData(@PrimaryKey @ColumnInfo(name = "id") val id: Int,
                          @ColumnInfo(name = "created_at") val created_at: String,
                          @ColumnInfo(name = "updated_at") val updated_at: String,
                          @ColumnInfo(name = "weight") val weight: Int,
-                         @ColumnInfo(name = "isBookMarked") val isBookMarked: Boolean)
+                         @ColumnInfo(name = "isBookMarked") val isBookMarked: Boolean,
+                         @ColumnInfo(name = "bookMarked") val bookMarked: Int)

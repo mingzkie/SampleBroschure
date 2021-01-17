@@ -17,7 +17,7 @@ interface ToolsInfoRepository {
 
     suspend fun getProductItem(id: Int, sku: String)
 
-    fun updateBookmark(id: Int, isBookMarked: Boolean)
+    fun update(toolsInfoData: ToolsInfoData)
 
     suspend fun reloadData()
 

@@ -32,6 +32,12 @@ abstract class ToolsRoomDatabase: RoomDatabase() {
                 }
             }
 
+            val MIGRATION_3_4 = object : Migration(3, 4) {
+                override fun migrate(database: SupportSQLiteDatabase) {
+                    database.execSQL("ALTER TABLE ToolsInfoData ADD COLUMN bookMarked INTEGER DEFAULT 0 NOT NULL")
+                }
+            }
+
             operator fun invoke(context: Context) = INSTANCE ?: synchronized(this) {
                 INSTANCE ?: buildDatabase(context).also { INSTANCE= it }
             }
@@ -39,7 +45,7 @@ abstract class ToolsRoomDatabase: RoomDatabase() {
             private fun buildDatabase(context: Context) =
                 Room.databaseBuilder(context.applicationContext,
                     ToolsRoomDatabase::class.java, "toolsinfo_database")
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4)
                     .build()
 
         }

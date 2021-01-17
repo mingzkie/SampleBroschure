@@ -80,10 +80,10 @@ class ItemListAdapter(private val listItemValues: List<ToolsInfoDto>, private va
             productName.text = itemValues.name
             productPrice.text = "$".plus(itemValues.price.toString())
 
-            if(itemValues.isBookMarked){
-                bookmark.setImageResource(R.drawable.ic_bookmark_enable)
-            } else {
+            if(itemValues.bookMarked == 0){
                 bookmark.setImageResource(R.drawable.ic_bookmark_disable)
+            } else {
+                bookmark.setImageResource(R.drawable.ic_bookmark_enable)
             }
 
             view.setOnClickListener {
